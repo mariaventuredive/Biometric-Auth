@@ -27,6 +27,7 @@ const App = () => {
 
   const authenticate = async () => {
 
+
     if (Platform.OS == 'android') {
       rnBiometrics.isSensorAvailable()
       .then((resultObject) => {
@@ -79,6 +80,50 @@ const App = () => {
     }
 
   }
+
+ const checKeys=()=>{
+  rnBiometrics.biometricKeysExist()
+  .then((resultObject) => {
+    const { keysExist } = resultObject
+
+    if (keysExist) {
+      console.log('Keys exist')
+      authenticate();
+    } else {
+      Alert.alert('User do not exist. Please Signup')
+     //console.log('Keys do not exist or were deleted')
+    }
+  })
+
+  }
+
+
+  const signUp=()=>{
+    let epochTimeSeconds = Math.round((new Date()).getTime() / 1000).toString()
+// let payload = epochTimeSeconds + 'some message'
+
+// const rnBiometrics = new ReactNativeBiometrics()
+
+// rnBiometrics.createSignature({
+//     promptMessage: 'Sign in',
+//     payload: payload
+//   })
+//   .then((resultObject) => {
+//     const { success, signature } = resultObject
+
+//     if (success) {
+//       console.log(signature)
+//     //  verifySignatureWithServer(signature, payload)
+//     }
+//   })
+    rnBiometrics.createKeys()
+    .then((resultObject) => {
+      const { publicKey } = resultObject;
+      
+      console.log(resultObject)
+    // sendPublicKeyToServer(publicKey)
+   })
+  }
   useEffect(() => {
 
 
@@ -116,11 +161,15 @@ const App = () => {
       {!lockedOpen ?
         <View style={styles.container}>
           <Text style={styles.heading}>Biometric Login</Text>
-          <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => authenticate()}>
+          <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => checKeys()}>
             <Text style={styles.texts}>Please Use biometric login</Text>
             <Image source={Platform.OS == 'android' ? require('./assets/fingerprint.png') : require('./assets/security.png')}
               style={{ width: 80, height: 80 }}
             />
+          </TouchableOpacity>
+          <TouchableOpacity style={{ alignItems: 'center', backgroundColor: '#ffff', borderRadius: 5 }} onPress={() => signUp()}>
+            <Text style={[styles.texts, { margin: 10 }]}>Signup</Text>
+
           </TouchableOpacity>
         </View>
         :
