@@ -16,22 +16,24 @@ import {
   View,
 } from 'react-native';
 import * as LocalAuthentication from "expo-local-authentication";
+import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics'
+import { RSA } from 'react-native-rsa-native';
 
-
+let message = "my secret message";
 const App = () => {
   const [lockedOpen, setLockedOpen] = useState(false);
 
   const authenticate = async () => {
-  const enrolled = await LocalAuthentication.getEnrolledLevelAsync();
+    const enrolled = await LocalAuthentication.getEnrolledLevelAsync();
     const supported = await LocalAuthentication.supportedAuthenticationTypesAsync();
 
-    console.log("enrolled",enrolled);
-    console.log("supported",supported);
-    const hasHardware = await LocalAuthentication.hasHardwareAsync(); 
+    console.log("enrolled", enrolled);
+    console.log("supported", supported);
+    const hasHardware = await LocalAuthentication.hasHardwareAsync();
     if (!hasHardware) {
-     Alert.alert("Not Supported")
-     return
-      
+      Alert.alert("Not Supported")
+      return
+
     }
 
     const res = await LocalAuthentication.authenticateAsync();
@@ -48,6 +50,22 @@ const App = () => {
   }, [])
   const isDarkMode = useColorScheme() === 'dark';
 
+  const encryption = () => {
+    RSA.generateKeys(4096) // set key size
+      .then(keys => {
+        console.log('4096 private:', keys.private); // the private key
+        console.log('4096 public:', keys.public); // the public key
+        RSA.encrypt(message, keys.public)
+          .then(encodedMessage => {
+            console.log(`the encoded message is ${encodedMessage}`);
+            RSA.decrypt(encodedMessage, keys.private)
+              .then(decryptedMessage => {
+                console.log(`The original message was ${decryptedMessage}`);
+              });
+          });
+      });
+  }
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -56,25 +74,30 @@ const App = () => {
 
       />
 
-   
+
 
 
       {!lockedOpen ?
-      <View style={styles.container}> 
-           <Text style={styles.heading}>Biometric Login</Text>
-        <TouchableOpacity style={{alignItems:'center'}} onPress={() => authenticate()}>
-          <Text style={styles.texts}>Please Use biometric login</Text>
-          <Image source={Platform.OS == 'android' ? require('./assets/fingerprint.png') : require('./assets/security.png')}
-            style={{ width: 80, height: 80 }}
-          />
-        </TouchableOpacity>
+        <View style={styles.container}>
+          <Text style={styles.heading}>Biometric Login</Text>
+          <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => authenticate()}>
+            <Text style={styles.texts}>Please Use biometric login</Text>
+            <Image source={Platform.OS == 'android' ? require('./assets/fingerprint.png') : require('./assets/security.png')}
+              style={{ width: 80, height: 80 }}
+            />
+          </TouchableOpacity>
         </View>
-        : 
-        <View style={[styles.container,{backgroundColor:'#A19B88', width:'100%'}]}><Text style={[styles.heading, {color:'#ffff',margin:20}]}>Welcome Back!</Text>
-          <TouchableOpacity style={{alignItems:'center', backgroundColor:'#ffff', borderRadius:5}} onPress={() => setLockedOpen(false)}>
-          <Text style={[styles.texts,{margin:10}]}>Logout</Text>
-        
-        </TouchableOpacity>
+        :
+        <View style={[styles.container, { backgroundColor: '#A19B88', width: '100%' }]}><Text style={[styles.heading, { color: '#ffff', margin: 20 }]}>Welcome Back!</Text>
+          <TouchableOpacity style={{ alignItems: 'center', backgroundColor: '#ffff', borderRadius: 5, margin: 10 }} onPress={() => encryption()}>
+            <Text style={[styles.texts, { margin: 10 }]}>Encode</Text>
+
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{ alignItems: 'center', backgroundColor: '#ffff', borderRadius: 5 }} onPress={() => setLockedOpen(false)}>
+            <Text style={[styles.texts, { margin: 10 }]}>Logout</Text>
+
+          </TouchableOpacity>
         </View>
       }
 
@@ -84,15 +107,15 @@ const App = () => {
 
 
 const styles = StyleSheet.create({
-  heading:{
-    fontSize:20,
-    fontWeight:'bold'
+  heading: {
+    fontSize: 20,
+    fontWeight: 'bold'
 
   },
-  texts:{
-    fontSize:15,
-    margin:20
-    
+  texts: {
+    fontSize: 15,
+    margin: 20
+
 
   },
   container: {
