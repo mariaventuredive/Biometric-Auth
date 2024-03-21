@@ -17,6 +17,8 @@ import {
 } from 'react-native';
 import * as LocalAuthentication from "expo-local-authentication";
 import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics'
+
+const rnBiometrics = new ReactNativeBiometrics()
 import { RSA } from 'react-native-rsa-native';
 
 let message = "my secret message";
@@ -24,22 +26,56 @@ const App = () => {
   const [lockedOpen, setLockedOpen] = useState(false);
 
   const authenticate = async () => {
-    const enrolled = await LocalAuthentication.getEnrolledLevelAsync();
-    const supported = await LocalAuthentication.supportedAuthenticationTypesAsync();
 
-    console.log("enrolled", enrolled);
-    console.log("supported", supported);
-    const hasHardware = await LocalAuthentication.hasHardwareAsync();
-    if (!hasHardware) {
-      Alert.alert("Not Supported")
-      return
+    if (Platform.OS == 'android') {
+      rnBiometrics.isSensorAvailable()
+      .then((resultObject) => {
+        const { available, biometryType } = resultObject
 
+        if (available && biometryType === BiometryTypes.TouchID) {
+          console.log('TouchID is supported')
+        } else if (available && biometryType === BiometryTypes.FaceID) {
+          console.log('FaceID is supported')
+        } else if (available && biometryType === BiometryTypes.Biometrics) {
+          console.log('Biometrics is supported')
+        } else {
+          console.log('Biometrics not supported')
+        }
+      })
+
+      rnBiometrics.simplePrompt({ promptMessage: 'Confirm fingerprint' })
+        .then((resultObject) => {
+          const { success } = resultObject
+
+          if (success) {
+            setLockedOpen(true)
+            console.log('successful biometrics provided')
+          } else {
+            console.log('user cancelled biometric prompt')
+          }
+        })
+        .catch(() => {
+          console.log('biometrics failed')
+        })
     }
+    if (Platform.OS == 'ios') {
+      const enrolled = await LocalAuthentication.getEnrolledLevelAsync();
+      const supported = await LocalAuthentication.supportedAuthenticationTypesAsync();
 
-    const res = await LocalAuthentication.authenticateAsync();
-    console.log("res", res);
-    if (res.success) {
-      setLockedOpen(true)
+      console.log("enrolled", enrolled);
+      console.log("supported", supported);
+      const hasHardware = await LocalAuthentication.hasHardwareAsync();
+      if (!hasHardware) {
+        Alert.alert("Not Supported")
+        return
+
+      }
+
+      const res = await LocalAuthentication.authenticateAsync();
+      console.log("res", res);
+      if (res.success) {
+        setLockedOpen(true)
+      }
     }
 
   }
