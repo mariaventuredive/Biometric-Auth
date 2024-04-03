@@ -50,5 +50,14 @@
 	<false/>
 	<key>NSFaceIDUsageDescription</key>
 <string>Allow $(PRODUCT_NAME) to use FaceID</string>
+  <key>NSCameraUsageDescription</key>
+  <string>Allow $(PRODUCT_NAME) to use camera</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  <string>Allow $(PRODUCT_NAME) to use location</string>
+
+    <key>NSPhotoLibraryUsageDescription</key>
+  <string>Allow $(PRODUCT_NAME) to use photos</string>
+  <key>NSPhotoLibraryAddUsageDescription</key>
+  <string>Allow $(PRODUCT_NAME) to use videos and photos</string>
 </dict>
 </plist>

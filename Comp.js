@@ -4,6 +4,8 @@ import { View, Text, StyleSheet, Button, TouchableOpacity, Alert } from 'react-n
 import NetworkContext from './context/NetworkContext';
 import { saveData, getData, removeData } from './utils/SecureStorage';
 import rsaUtility from './utils/RsaEncryptDecycript';
+import { navigateToScreen } from './utils/NavigationRef';
+
 const SimpleComp = ({ navigation }) => {
 
     const isConnected = useContext(NetworkContext);
@@ -45,7 +47,10 @@ const SimpleComp = ({ navigation }) => {
             <Text style={styles.text}>
                 Lets produce error by clicking on the following button to render a component that will throw an error.
             </Text>
-            <TouchableOpacity style={styles.buttons} onPress={() => { navigation.navigate('ComponentWithError') }}>
+            <TouchableOpacity style={styles.buttons} onPress={() => {
+                navigateToScreen('MediaPicker', { param1: 'value1' });
+            }
+                }>
                 <Text style={[{ color: '#ffff' }]}>Throw test error</Text>
             </TouchableOpacity>
 
