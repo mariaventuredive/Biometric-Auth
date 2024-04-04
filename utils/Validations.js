@@ -30,4 +30,16 @@ export const validatePhoneNumber = phoneNumber => {
     const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
     return urlRegex.test(url);
   };
+
+
+  /**
+ * Function to validate an email address
+ * @param {string} email - Email address to validate
+ * @returns {boolean} - True if the email address is valid, false otherwise
+ */
+export const validateEmail = email => {
+    // Email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
   
