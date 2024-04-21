@@ -15,13 +15,37 @@ import { ErrorFallback } from "./utils/ErrorFallback";
 import { checkLocationPermission , requestCameraPermission, requestLocationPermission,checkCameraPermission} from './utils/PermissionsUtil';
 import MediaPicker from './screens/MediaPicker';
 import { setNavigationReference } from './utils/NavigationRef';
+import {  Platform,LogLevel } from '@dynatrace/react-native-plugin';
+
+import { Dynatrace, DataCollectionLevel, UserPrivacyOptions } from '@dynatrace/react-native-plugin';
+import {  ConfigurationBuilder } from '@dynatrace/react-native-plugin';
+// Privacy settings configured below are only provided
 
 
 const App = () => {
   const theme = useColorScheme();
   const Stack = createStackNavigator();
 
+
+ // const configurationBuilder = new ConfigurationBuilder("https://bf07731ogr.bf.dynatrace.com/mbeacon", "a0299a68-e245-42e0-85a8-f2c61d5d2857");
 useEffect(()=>{
+
+
+
+// configurationBuilder.withCrashReporting(true)
+//   .withLogLevel(LogLevel.Debug)
+//   .withLifecycleUpdate(false)
+//   .withUserOptIn(false)
+//   .withActionNamePrivacy(false)
+//   .withBundleName(undefined);
+  
+// Dynatrace.start(configurationBuilder.buildConfiguration());
+  // to allow a quick start with capturing monitoring data.
+// This has to be requested from the user
+// (e.g. in a privacy settings screen) and the user decision
+// has to be applied similar to this example.
+let privacyConfig = new UserPrivacyOptions(DataCollectionLevel.UserBehavior, true);
+Dynatrace.applyUserPrivacyOptions(privacyConfig);
   checkCamera()
   checkLocation()
   requestLocationPermission()

@@ -5,7 +5,7 @@ import NetworkContext from './context/NetworkContext';
 import { saveData, getData, removeData } from './utils/SecureStorage';
 import rsaUtility from './utils/RsaEncryptDecycript';
 import { navigateToScreen } from './utils/NavigationRef';
-
+import { Dynatrace, reportCrash,DataCollectionLevel,DynatraceWebRequestTiming, UserPrivacyOptions } from '@dynatrace/react-native-plugin';
 const SimpleComp = ({ navigation }) => {
 
     const isConnected = useContext(NetworkContext);
@@ -37,6 +37,33 @@ const SimpleComp = ({ navigation }) => {
         Alert.alert('Decrypted Message:', decryptedMessage);
     };
 
+
+    const reportAction = async () => {
+        reportCrash("Crash is jere")
+        Dynatrace.identifyUser("User XY");
+       reportCrash("someCrasf");
+    // Dynatrace.endSession();
+        let myAction = Dynatrace.enterAutoAction("MyButton tapped");
+myAction.reportStringValue("ValueName", "ImportantValue");
+myAction.leaveAction();
+        let url = 'https://www.dynatrace.com';
+        // You can also use enterAutoAction if desired
+        let action = Dynatrace.enterManualAction("Manual Web Request");
+        let tag = await action.getRequestTag(url);
+        let timing = new DynatraceWebRequestTiming(url, tag);
+
+        try {
+            timing.startWebRequestTiming();
+            let axiosResponse = await axios.get(url);
+            timing.stopWebRequestTimingWithSize(axiosResponse.status, axiosResponse.data, 122, 63);
+        } catch (error) {
+            timing.stopWebRequestTiming(-1, error);
+        } finally {
+            action.leaveAction();
+       }
+    }
+
+
     return (
 
         <View style={styles.container}>
@@ -47,10 +74,19 @@ const SimpleComp = ({ navigation }) => {
             <Text style={styles.text}>
                 Lets produce error by clicking on the following button to render a component that will throw an error.
             </Text>
-            <TouchableOpacity style={styles.buttons} onPress={() => {
+            <TouchableOpacity 
+            accessibilityLabel='Reported'
+            style={styles.buttons} onPress={() => {
+                reportAction()
+                
+                let myAction = Dynatrace.enterManualAction("MyButton tapped");
+                //Perform the action and whatever else is needed.
+                myAction.leaveAction();
+                // let myAction = Dynatrace.enterAutoAction("MyButton tapped");
+                // myAction.leaveAction();
                 navigateToScreen('MediaPicker', { param1: 'value1' });
             }
-                }>
+            }>
                 <Text style={[{ color: '#ffff' }]}>Throw test error</Text>
             </TouchableOpacity>
 
@@ -120,5 +156,5 @@ const styles = StyleSheet.create({
     }
 });
 
-
+Dynatrace.withMonitoring(SimpleComp, "SimpleComp");
 export default SimpleComp

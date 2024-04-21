@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@dynatrace/react-native-plugin": "^2.287.2",
     "@react-native-community/netinfo": "^11.3.1",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/stack": "^6.3.29",

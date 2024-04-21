@@ -2,6 +2,9 @@ PODS:
   - boost (1.83.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
+  - Dynatrace (8.287.2.1009):
+    - Dynatrace/xcframework (= 8.287.2.1009)
+  - Dynatrace/xcframework (8.287.2.1009)
   - EXConstants (15.4.5):
     - ExpoModulesCore
   - EXFont (11.10.3):
@@ -965,6 +968,12 @@ PODS:
     - React-debug
   - react-native-biometrics (3.0.1):
     - React-Core
+  - react-native-dynatrace (2.287.2):
+    - Dynatrace (~> 8.287.2.1009)
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React
+    - React-Core
   - react-native-image-picker (7.1.2):
     - glog
     - RCT-Folly (= 2022.05.16.00)
@@ -1218,6 +1227,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - react-native-biometrics (from `../node_modules/react-native-biometrics`)
+  - "react-native-dynatrace (from `../node_modules/@dynatrace/react-native-plugin`)"
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-rsa-native (from `../node_modules/react-native-rsa-native`)
@@ -1251,6 +1261,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - CocoaAsyncSocket
+    - Dynatrace
     - Flipper
     - Flipper-Boost-iOSX
     - Flipper-DoubleConversion
@@ -1336,6 +1347,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   react-native-biometrics:
     :path: "../node_modules/react-native-biometrics"
+  react-native-dynatrace:
+    :path: "../node_modules/@dynatrace/react-native-plugin"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-netinfo:
@@ -1399,6 +1412,7 @@ SPEC CHECKSUMS:
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
+  Dynatrace: c8fe27efa30ae2b2b0e51a6f7026565e5c5741b5
   EXConstants: 988aa430ca0f76b43cd46b66e7fae3287f9cc2fc
   EXFont: f20669cb266ef48b004f1eb1f2b20db96cd1df9f
   Expo: a7c9bd836cb7c86e699c2539a906c9ff873f19f8
@@ -1443,6 +1457,7 @@ SPEC CHECKSUMS:
   React-logger: 3eb80a977f0d9669468ef641a5e1fabbc50a09ec
   React-Mapbuffer: 84ea43c6c6232049135b1550b8c60b2faac19fab
   react-native-biometrics: 352e5a794bfffc46a0c86725ea7dc62deb085bdc
+  react-native-dynatrace: 27d2d19470d05e20947c8a3b1e4547f0bbd00490
   react-native-image-picker: d3db110a3ded6e48c93aef7e8e51afdde8b16ed0
   react-native-netinfo: bdb108d340cdb41875c9ced535977cac6d2ff321
   react-native-rsa-native: 12132eb627797529fdb1f0d22fd0f8f9678df64a
